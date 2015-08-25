@@ -37,6 +37,8 @@
 		///			array[z][y][x] = true | false
 		(Cheese = function (structure) {
 			
+			
+			
 		}).prototype = {
 			
 			/// @fn parseBooleanStructure
@@ -75,6 +77,24 @@
 			/// @fn step
 			/// @brief Represents a step in the simulation.
 			step: function (z, y, x, m) {
+			
+			}
+			
+			/// @fn getDiversions
+			/// @brief Returns the possible directions from a specific coordinate, where water can flow.
+			/// 
+			/// @param z
+			/// @brief The z coordinate from where the water comes.
+			/// 
+			/// @param y
+			/// @brief The y coordinate from where the water comes.
+			/// 
+			/// @param x
+			/// @brief The x coordinate from where the water comes.
+			///
+			/// @return Array
+			/// @brief An array of coordinates where the water can flow.
+			getDiversions: function (z, y, x) {
 			
 			}
 			
