@@ -11,7 +11,7 @@
 		/// @brief Represents a cheese which is made of cheese- and air-segments.
 		///
 		/// @param structure
-		/// @brief A threedimenstional array like this:
+		/// @brief A threedimensional array like this:
 		///		[ <-- The cheese array, which holds the z-layers
 		///			[ <-- A z-layer Z: 0
 		///				[ false, true, true ], <-- X: 0 - 2, Y: 0
@@ -38,6 +38,45 @@
 		(Cheese = function (structure) {
 			
 		}).prototype = {
+			
+			/// @fn parseBooleanStructure
+			/// @brief Parses a threedimensional array (see structure-param of Cheese-class) into an array which holds air- or cheese-segments.
+			///
+			/// @param structure
+			/// @brief see structure-param of Cheese-class.
+			///
+			/// @return Array
+			/// @brief A threedimensional array which contains the cheese- and air-segments.
+			parseBooleanStructure: function (structure) {
+			
+			}
+			
+			/// @fn pour
+			/// @brief Simulates a water flow from a start position. The given coordinates have to point to an air-segment at the surface of the cheese.
+			/// 
+			/// @param z
+			/// @brief The z coordinate where the water flows into the cheese.
+			/// 
+			/// @param y
+			/// @brief The y coordinate where the water flows into the cheese.
+			/// 
+			/// @param x
+			/// @brief The x coordinate where the water flows into the cheese.
+			/// 
+			/// @param m
+			/// @brief The capacity of water-segments which flow into the cheese. (default: 1)
+			///
+			/// @return Boolean
+			/// @brief Indicates whether the water flew through the cheese or not.
+			pour: function (z, y, x, m) {
+				
+			}
+			
+			/// @fn step
+			/// @brief Represents a step in the simulation.
+			step: function (z, y, x, m) {
+			
+			}
 			
 		};
 		
