@@ -7,6 +7,10 @@
 <body>
 	<script type="text/javascript">
 	
+		var AIR = 'AIR';
+		
+		var CHEESE = 'CHEESE';
+	
 		/// @class Cheese
 		/// @brief Represents a cheese which is made of cheese- and air-segments.
 		///
@@ -37,9 +41,11 @@
 		///			array[z][y][x] = true | false
 		(Cheese = function (structure) {
 			
-			
+			this.structure = this.parseBooleanStructure(structure);
 			
 		}).prototype = {
+		
+			structure: null,
 			
 			/// @fn parseBooleanStructure
 			/// @brief Parses a threedimensional array (see structure-param of Cheese-class) into an array which holds air- or cheese-segments.
@@ -51,6 +57,20 @@
 			/// @brief A threedimensional array which contains the cheese- and air-segments.
 			parseBooleanStructure: function (structure) {
 			
+				for (var zIndex = 0; zIndex < structure.length; zIndex++)
+				
+					for (var yIndex = 0; yIndex < structure[zIndex].length; yIndex++)
+					
+						for (var xIndex = 0; xIndex < structure[zIndex][yIndex].length; xIndex++)
+						
+							structure[zIndex][yIndex][xIndex] = structure[zIndex][yIndex][xIndex] ? {
+								type: CHEESE
+							} : {
+								type: AIR
+							};
+			
+				return structure;
+			
 			}
 			
 			/// @fn pour
@@ -58,9 +78,6 @@
 			/// 
 			/// @param z
 			/// @brief The z coordinate where the water flows into the cheese.
-			/// 
-			/// @param y
-			/// @brief The y coordinate where the water flows into the cheese.
 			/// 
 			/// @param x
 			/// @brief The x coordinate where the water flows into the cheese.
@@ -70,13 +87,28 @@
 			///
 			/// @return Boolean
 			/// @brief Indicates whether the water flew through the cheese or not.
-			pour: function (z, y, x, m) {
+			pour: function (z, x, m) {
+				
+				if (!m)
+					m = 1;
+					
+				this.step(z, 0, x, m);
 				
 			}
 			
 			/// @fn step
 			/// @brief Represents a step in the simulation.
 			step: function (z, y, x, m) {
+				
+				m--;
+				
+				this.structure[z][y][x].visited = true;
+			
+				var diversions = this.getDiversions(z, y, x);
+				
+				for (var index = 0; index < diversions.length; index++)
+				
+					this.step.apply(this, diversions[index].splice(diversions[index].length, 0, m));
 			
 			}
 			
@@ -96,12 +128,35 @@
 			/// @brief An array of coordinates where the water can flow.
 			getDiversions: function (z, y, x) {
 			
+				var diversions = [];
+				
+				for (var i = 0; i < 6; i++) {
+				
+					var pos = i >> 1;
+					
+					var factor = 1 - 2 * (i & 1);
+					
+					var dy = pos % 2;
+					
+					var dz = pos / 2;
+					
+					var _x = x + (dy | dz) * -factor;
+					
+					var _y = y + dy * factor;
+					
+					var _z = z + dz * factor;
+					
+					if (this.structure[_z][_y][_x].type == AIR)
+						diversions.push([_z, _y, _x]);
+				
+				}
+			
+				return diversions;
+			
 			}
 			
 		};
 		
-		
-	
 	</script>
 </body>
 </html>
