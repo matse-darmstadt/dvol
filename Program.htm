@@ -81,26 +81,18 @@
 			/// 
 			/// @param x
 			/// @brief The x coordinate where the water flows into the cheese.
-			/// 
-			/// @param m
-			/// @brief The capacity of water-segments which flow into the cheese. (default: 1)
 			///
 			/// @return Boolean
 			/// @brief Indicates whether the water flew through the cheese or not.
-			pour: function (z, x, m) {
-				
-				if (!m)
-					m = 1;
+			pour: function (z, x) {
 					
-				this.step(z, 0, x, m);
+				this.step(z, 0, x);
 				
 			}
 			
 			/// @fn step
 			/// @brief Represents a step in the simulation.
-			step: function (z, y, x, m) {
-				
-				m--;
+			step: function (z, y, x) {
 				
 				this.structure[z][y][x].visited = true;
 			
@@ -108,7 +100,7 @@
 				
 				for (var index = 0; index < diversions.length; index++)
 				
-					this.step.apply(this, diversions[index].splice(diversions[index].length, 0, m));
+					this.step.apply(this, diversions[index]);
 			
 			}
 			
@@ -138,7 +130,7 @@
 					
 					var dy = pos % 2;
 					
-					var dz = pos / 2;
+					var dz = pos >> 1;
 					
 					var _x = x + (dy | dz) * -factor;
 					
