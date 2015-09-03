@@ -131,3 +131,20 @@
 	}
 	
 };
+
+function GenerateCheese (dim, segmentTypeSelector) {
+	
+	var boolStruct = new Array(dim);
+
+	for (var z = 0; z < dim; z++) {
+		boolStruct[z] = new Array(dim);		
+		for (var y = 0; y < dim; y++) {
+			boolStruct[z][y] = new Array(dim);
+			for (var x = 0; x < dim; x++) {
+				boolStruct[z][y][x] = segmentTypeSelector(x,y,z);
+			}
+		}
+	}
+	return boolStruct;
+}
+
