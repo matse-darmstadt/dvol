@@ -111,6 +111,23 @@
 	/// @return Boolean
 	/// @brief Indicates whether the coordinates represent an element in the cheese or not.
 	isInsideCheese: function (z, y, x) {
+	},
+	
+	/// @fn isBottom
+	/// @brief Returns if the given coordinates are at the bottom of the cheese.
+	/// 
+	/// @param z
+	/// @brief The z coordinate from where the water comes.
+	/// 
+	/// @param y
+	/// @brief The y coordinate from where the water comes.
+	/// 
+	/// @param x
+	/// @brief The x coordinate from where the water comes.
+	///
+	/// @return Boolean
+	/// @brief Indicates whether the coordinates represent an element at the bottom of the cheese or not.
+	isBottom: function (z, y, x) {
 	}
 	
 };
