@@ -52,9 +52,6 @@
 	/// 
 	/// @param x
 	/// @brief The x coordinate where the water flows into the cheese.
-	/// 
-	/// @param m
-	/// @brief The capacity of water-segments which flow into the cheese. (default: 1)
 	///
 	/// @return Boolean
 	/// @brief Indicates whether the water flew through the cheese or not.
@@ -96,6 +93,24 @@
 	/// @brief Indicates if the pouring point is valid.
 	validatePouring: function (z, x) {
 		
+	},
+	
+	
+	/// @fn isInsideCheese
+	/// @brief Returns if the given coordinates are inside the cheese.
+	/// 
+	/// @param z
+	/// @brief The z coordinate from where the water comes.
+	/// 
+	/// @param y
+	/// @brief The y coordinate from where the water comes.
+	/// 
+	/// @param x
+	/// @brief The x coordinate from where the water comes.
+	///
+	/// @return Boolean
+	/// @brief Indicates whether the coordinates represent an element in the cheese or not.
+	isInsideCheese: function (z, y, x) {
 	}
 	
 };
