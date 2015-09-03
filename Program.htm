@@ -51,16 +51,13 @@
 			/// @brief A threedimensional array which contains the cheese- and air-segments.
 			parseBooleanStructure: function (structure) {
 			
-			}
+			},
 			
 			/// @fn pour
 			/// @brief Simulates a water flow from a start position. The given coordinates have to point to an air-segment at the surface of the cheese.
 			/// 
 			/// @param z
 			/// @brief The z coordinate where the water flows into the cheese.
-			/// 
-			/// @param y
-			/// @brief The y coordinate where the water flows into the cheese.
 			/// 
 			/// @param x
 			/// @brief The x coordinate where the water flows into the cheese.
@@ -70,24 +67,21 @@
 			///
 			/// @return Boolean
 			/// @brief Indicates whether the water flew through the cheese or not.
-			pour: function (z, y, x, m) {
+			pour: function (z, x) {
 				
-			}
+			},
 			
 			/// @fn step
 			/// @brief Represents a step in the simulation.
-			step: function (z, y, x, m) {
+			step: function (z, y, x) {
 			
-			}
+			},
 			
 			/// @fn getDiversions
 			/// @brief Returns the possible directions from a specific coordinate, where water can flow.
 			/// 
 			/// @param z
 			/// @brief The z coordinate from where the water comes.
-			/// 
-			/// @param y
-			/// @brief The y coordinate from where the water comes.
 			/// 
 			/// @param x
 			/// @brief The x coordinate from where the water comes.
@@ -96,12 +90,25 @@
 			/// @brief An array of coordinates where the water can flow.
 			getDiversions: function (z, y, x) {
 			
+			},
+			
+			/// @fn validatePouring
+			/// @brief Validates that the pouring point is on the top surface of the cheese.
+			/// 
+			/// @param z
+			/// @brief The z coordinate from where the water comes.
+			/// 
+			/// @param x
+			/// @brief The x coordinate from where the water comes.
+			///
+			/// @return Boolean
+			/// @brief Indicates if the pouring point is valid.
+			validatePouring: function (z, x) {
+				
 			}
 			
 		};
 		
-		
-	
 	</script>
 </body>
 </html>
