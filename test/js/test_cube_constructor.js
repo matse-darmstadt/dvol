@@ -13,4 +13,3 @@ QUnit.test("Test GenerateCheese", function(assert) {
 	assert.propEqual(boolStruct[0][0].length, 3, "checking cheese cube dimension");
 	assert.ok(boolStruct[0][0][0], "checking cheese cube value");
 });
-
