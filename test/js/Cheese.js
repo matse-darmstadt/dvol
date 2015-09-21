@@ -128,6 +128,7 @@
 	/// @return Boolean
 	/// @brief Indicates whether the coordinates represent an element at the bottom of the cheese or not.
 	isBottom: function (z, y, x) {
+		return true;
 	}
 	
 };
