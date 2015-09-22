@@ -3,9 +3,9 @@
  * 
  * These tests create cubes of different compositions and verify edibility  
  */
+QUnit.module ("Cube Constructor Tests");
  
 // true on all segments
-QUnit.module ("Cube Constructor Tests");
 QUnit.test("it's all cheese, man", function(assert) {
 	var boolStruct = GenerateCheese(3, function(x,y,z) {
 		return true;
