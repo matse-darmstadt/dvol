@@ -28,6 +28,12 @@
 ///			array[z][y][x] = true | false
 (Cheese = function (structure) {
 	
+	if (structure == void 0)
+		return;
+	
+	if (!(structure instanceof Array))
+		throw 'Cheese -> ArgumentException: structure';
+	
 	this.structure = structure;
 	
 	this.segments = this.parseBooleanStructure(this.structure);
@@ -111,7 +117,7 @@
 		if (!this.isInsideCheese(z, y, x))
 			throw 'step -> ArgumentException: z, y, x';
 	
-		if (this.isBottom(z, y, x))
+		if (y == this.segments[z].length - 1)
 			return true;
 	
 		var diversions  = this.getDiversions(z, y, x);
@@ -214,7 +220,7 @@
 	getDiversions: function (z, y, x) {
 	
 		var diversions = [];
-				
+		
 		for (var i = 0; i < 6; i++) {
 		
 			var pos = i >> 1;
@@ -223,13 +229,16 @@
 			
 			var dy = pos % 2;
 			
-			var dz = pos / 2;
+			var dz = (pos / 2) | 0;
 			
-			var _x = x + (dy | dz) * -factor;
+			var _x = x + !(dy ^ dz) * -factor;
 			
 			var _y = y + dy * factor;
 			
 			var _z = z + dz * factor;
+			
+			if (!this.isInsideCheese(_z, _y, _x))
+				continue;
 			
 			if (!this.segments[_z][_y][_x].type)
 				diversions.push({
@@ -273,7 +282,6 @@
 		return !this.segments[z][0][x].type;
 		
 	},
-	
 	
 	/// @fn isInsideCheese
 	/// @brief Returns if the given coordinates are inside the cheese.
