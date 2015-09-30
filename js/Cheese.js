@@ -28,9 +28,11 @@
 ///			array[z][y][x] = true | false
 (Cheese = function (structure) {
 	
-	
+	this.structure = structure;
 	
 }).prototype = {
+	
+	structure: null,
 	
 	/// @fn parseBooleanStructure
 	/// @brief Parses a threedimensional array (see structure-param of Cheese-class) into an array which holds air- or cheese-segments.
@@ -41,7 +43,24 @@
 	/// @return Array
 	/// @brief A threedimensional array which contains the cheese- and air-segments.
 	parseBooleanStructure: function (structure) {
-	
+		
+		if (!(structure instanceof Array))
+			throw 'ArgumentException: structure';
+		
+		for (var zIndex = 0; zIndex < structure.length; zIndex++) {
+		
+			if (!(structure[zIndex] instanceof Array))
+				throw 'ArgumentException: structure[' + zIndex + ']';
+			
+			for (var yIndex = 0; yIndex < structure[zIndex].length; yIndex++) {
+			
+				if (!(structure[zIndex][yIndex] instanceof Array))
+					throw 'ArgumentException: structure[' + zIndex + '][' + yIndex + ']';
+			
+			}
+			
+		}
+		
 	},
 	
 	/// @fn pour
@@ -147,4 +166,3 @@ function GenerateCheese (dim, segmentTypeSelector) {
 	}
 	return boolStruct;
 }
-
