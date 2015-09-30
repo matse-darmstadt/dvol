@@ -28,11 +28,6 @@ Array.prototype.equals = function (array) {
     return true;
 }  
 
-QUnit.test("array equals", function(assert) {
-	var test = [1, 2, 3];
-	assert.ok(test.equals([1, 2, 3]), "array test SUCCESS");
-});
-
 QUnit.assert.arrayContains = function (haystack, needle, message) {
     for (var key in haystack) {
 		if (haystack[key] instanceof Array) {
@@ -48,13 +43,13 @@ QUnit.assert.arrayContains = function (haystack, needle, message) {
     this.push( false, haystack, needle, message );
 };
 
-QUnit.test("array contains", function(assert) {
-	var test = [1, 2, 3];
-	assert.arrayContains(test, 2, "array test");
-	
-	test = [[], [1,2], [3,4]];
-	assert.arrayContains(test, [1,2], "array test");
-});
+QUnit.assert.DiversionChecker = function (diversion, neighbours, message) {
+	if (diversion.equals(neighbours)) {
+		this.push(true, diversion, neighbours, message);
+		return;
+	}
+	this.push(false, diversion, neighbours, message);
+};
 
 QUnit.test("parseBooleanStructure", function(assert) {
 	var boolStruct = GenerateCheese(3, function(x,y,z) {
@@ -81,10 +76,10 @@ QUnit.test("pour", function(assert) {
 		for (var z = 0; z < cheese.length; z++) {
 			for (var x = 0; x < cheese.length; x++) {
 				if (cheese[z][y][x] === false) {
-					assert.ok(cheese.pour(z, x), "did flow, as expected")
+					assert.ok(cheese.pour(z, x), "allow pouring")
 				}
 				else {
-					assert.notOk(cheese.pour(z, x), "didn't flow, as expected")
+					assert.notOk(cheese.pour(z, x), "disallow pouring")
 				}
 				
 			}
@@ -92,18 +87,15 @@ QUnit.test("pour", function(assert) {
 	};
 });
 
-QUnit.test("step", function(assert) {
-	var cheese = new Cheese();
-	for (var z = 0; z < cheese.length; z++) {
-		for (var y = 0; y < cheese.length; y++) {
-			for (var x = 0; x < cheese.length; x++) {
-				assert.push(cheese.step(z, y, x), "stepped into cheese, eww!");
-			}
-		}
-	};
-});
+// step has no test - ask me!
+//~ QUnit.test("step", function(assert) {
+	//~ var cheese = new Cheese();
+	
+//~ });
 
-QUnit.test("getDiversions 1", function(assert) {
+
+// testing possible paths in solid cheese cube, shouldn't return any arrays
+QUnit.test("getDiversions: only cheese", function(assert) {
 	var cheese = new Cheese();
 	var boolStruct = GenerateCheese(3, function(x,y,z) {
 		return true;
@@ -112,13 +104,14 @@ QUnit.test("getDiversions 1", function(assert) {
 	for (var z = 0; z < cheese.length; z++) {
 		for (var y = 0; y < cheese.length; y++) {
 			for (var x = 0; x < cheese.length; x++) {
-				assert.ok(cheese.getDiversions(z, y, x).length == 0, "empty path: ok");
+				assert.ok(cheese.getDiversions(z, y, x).length == 0, "checking for no diversions");
 			}
 		}
 	};
 });
 
-QUnit.test("getDiversions 2", function(assert) {
+// testing possible paths in air cube, should return all valid neighbours on every coordinate
+QUnit.test("getDiversions: only air", function(assert) {
 	var cheese = new Cheese();
 	var boolStruct = GenerateCheese(3, function(x,y,z) {
 		return false;
@@ -129,10 +122,14 @@ QUnit.test("getDiversions 2", function(assert) {
 		for (var y = 0; y < cheese.length; y++) {
 			for (var x = 0; x < cheese.length; x++) {
 				var div = cheese.getDiversions(z, y, x);
+				
+				// the 6 neighbour segments
 				var neighbours = {	"top":true, "bottom":true, 
 									"back":true, "front":true,
 									"left":true, "right":true
 								};
+								
+				// setting neighbours to false at the edges				
 				switch (z) {
 					case 0:
 						neighbours["top"] = false;
@@ -154,41 +151,7 @@ QUnit.test("getDiversions 2", function(assert) {
 						neighbours["right"] = false;
 				}
 				
-				switch (neighbours) {
-					case 0:
-						if (z != cheese.length) {
-							assert.arrayContains(div, cheese[z][y1][x1], "array test");
-						}
-					case cheese.length - 1:
-						bottom = false;
-						break;
-					default:
-						top = true;
-						bottom = true;
-					}
-				switch (y) {
-					case 0:
-						back = false;
-					case cheese.length - 1:
-						front = false;
-						break;
-					default:
-						back = true;
-						front = true;
-				}
-				switch (x) {
-					case 0:
-						left = false;
-					case cheese.length - 1:
-						right = false;
-						break;
-					default:
-						left = true;
-						right = true;
-				}		
-				
-				
-				assert.arrayContains(div, cheese[z1][y1][x1], "array test");
+				assert.DiversionChecker(div, neighbours, "check diversion");	
 			}
 		}
 	};
@@ -204,7 +167,7 @@ QUnit.test("validatePouring", function(assert) {
 		for (var z = 0; z < cheese.length; z++) {
 			for (var x = 0; x < cheese.length; x++) {
 				if (cheese[z][y][x] === false) {
-					assert.ok(cheese.validatePouring(z, x), "valid pouring");
+					assert.ok(cheese.validatePouring(z, x), "check pouring");
 				}
 			}
 		}
