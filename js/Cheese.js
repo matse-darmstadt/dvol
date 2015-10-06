@@ -78,7 +78,9 @@
 				for (var xIndex = 0; xIndex < structure[zIndex][yIndex].length; xIndex++)
 					parsedArray[zIndex][yIndex][xIndex] = {
 					
-						type: !!structure[zIndex][yIndex][xIndex]
+						type: !!structure[zIndex][yIndex][xIndex],
+						
+						visited: false
 					
 					};
 			
@@ -116,6 +118,10 @@
 	
 		if (!this.isInsideCheese(z, y, x))
 			throw 'step -> ArgumentException: z, y, x';
+	
+		if (this.segments[z][y][x].visited)
+			return false;
+		this.segments[z][y][x].visited = true;
 	
 		if (y == this.segments[z].length - 1)
 			return true;

@@ -66,31 +66,6 @@ QUnit.test("parseBooleanStructure", function(assert) {
 	};
 });
 
-// QUnit.test("pour", function(assert) {
-	// var boolStruct = GenerateCheese(3, function(x,y,z) {
-		// return true;
-	// });
-	// var cheese = new Cheese(boolStruct);
-	// for (var z = 0; z < cheese.segments[z].length; z++) {
-		// for (var x = 0; x < cheese.segments[z][0].length; x++) {
-			// if (cheese.segments[z][0][x].type === false) {
-				// assert.ok(cheese.pour(z, x), "allow pouring")
-			// }
-			// else {
-				// assert.notOk(cheese.pour(z, x), "disallow pouring")
-			// }
-			
-		// }
-	// }
-// });
-
-// step has no test - ask me!
-//~ QUnit.test("step", function(assert) {
-	//~ var cheese = new Cheese();
-	
-//~ });
-
-
 // testing possible paths in solid cheese cube, shouldn't return any arrays
 QUnit.test("getDiversions: only cheese", function(assert) {
 	var boolStruct = GenerateCheese(3, function(x,y,z) {
@@ -106,55 +81,9 @@ QUnit.test("getDiversions: only cheese", function(assert) {
 	};
 });
 
-// testing possible paths in air cube, should return all valid neighbours on every coordinate
-// QUnit.test("getDiversions: only air", function(assert) {
-	// var boolStruct = GenerateCheese(3, function(x,y,z) {
-		// return false;
-	// });
-	// var cheese = new Cheese(boolStruct);
-	
-	// for (var z = 0; z < cheese.segments.length; z++) {
-		// for (var y = 0; y < cheese.segments[z].length; y++) {
-			// for (var x = 0; x < cheese.segments[z][y].length; x++) {
-				// var div = cheese.getDiversions(z, y, x);
-				
-				// // the 6 neighbour segments
-				// var neighbours = {	"top":true, "bottom":true, 
-									// "back":true, "front":true,
-									// "left":true, "right":true
-								// };
-								
-				// // setting neighbours to false at the edges				
-				// switch (z) {
-					// case 0:
-						// neighbours["top"] = false;
-					
-					// case 2:
-						// neighbours["bottom"] = false;
-						// break;
-					// }
-				// switch (y) {
-					// case 0:
-						// neighbours["back"] = false;
-					// case 2:
-						// neighbours["front"] = false;
-				// }
-				// switch (x) {
-					// case 0:
-						// neighbours["left"] = false;
-					// case 2:
-						// neighbours["right"] = false;
-				// }
-				
-				// assert.DiversionChecker(div, neighbours, "check diversion");	
-			// }
-		// }
-	// };
-// });
-
 QUnit.test("validatePouring", function(assert) {
 	var boolStruct = GenerateCheese(3, function(x,y,z) {
-		return true;
+		return !(x == 1 && z == 1);
 	});
 	var cheese = new Cheese(boolStruct);
 	for (var z = 0; z < cheese.segments.length; z++) {
@@ -184,3 +113,180 @@ QUnit.test("isInsideCheese", function(assert) {
 		}
 	};
 });
+
+QUnit.test("pour: should work.", function(assert) {
+	var boolStruct = GenerateCheese(3, function(x,y,z) {
+		return !(x == 1 && z == 1);
+	});
+	var cheese = new Cheese(boolStruct);
+	assert.ok(cheese.pour(1, 1));
+});
+
+QUnit.test("pour: should NOT work.", function(assert) {
+	var boolStruct = GenerateCheese(3, function(x,y,z) {
+		return !(x == 1 && z == 1 && y < 2);
+	});
+	var cheese = new Cheese(boolStruct);
+	assert.notOk(cheese.pour(1, 1));
+});
+
+QUnit.test("performance", function (assert) {
+	
+	var cheeses = [];
+	for (var c = 0; c != 5000; ++c)
+		cheeses.push(new Cheese(GenerateCheese(rInt(3, 10), function (x, y, z) {
+			var dist = rInt(1, 100);
+			return rInt(0, 101) <= dist;
+		})));
+	
+	var output = [];
+	var data = [];
+	for (var test = 0; test != 20; ++test) {
+		
+		var runs = [];
+		for (var run = 0; run != 20; ++run) {
+			var s = new Date();
+			for (var iter = 0; iter != cheeses.length; ++iter)
+				try {
+					cheeses[iter].pour(0, 0);
+				} catch (e) {
+				}
+			runs.push(new Date().getTime() - s.getTime());
+		}
+		var sum = 0;
+		for (var i = 0; i != runs.length; ++i)
+			sum += runs[i];
+		var avrg = sum / runs.length;
+		sum = 0;
+		for (var i = 0; i != runs.length; ++i) {
+			var tmp = runs[i] - avrg;
+			sum += tmp * tmp;
+		}
+		var vari = sum / runs.length;
+		var std = Math.sqrt(vari);
+		
+		output.push(avrg + '\t' + std);
+		data.push({
+			average: avrg,
+			standard: std
+		});
+		
+	}
+	console.log(output.join('\n'));
+	
+	var canvas = document.getElementById('canvas');
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
+	var ctx = canvas.getContext('2d');
+	ctx.fillStyle = '#fff';
+	ctx.fillRect(0, 0, canvas.width, canvas.height);
+	
+	var unit_size = 80;
+	var time_size = 40;
+	
+	ctx.fillStyle = '#d4d4d4';
+	var right = data.length * unit_size;
+	var o_x = 80;
+	var o_y = -80;
+	var o_ux = unit_size / 2 - 4;
+		
+	var f_size = time_size / 4 + 2;
+	var f_half = f_size / 2;
+		
+	var y_size = 3;
+	var y_half = 1;
+	var x_size = 9;
+	var x_half = 4;
+	
+	ctx.font = f_size + 'px serif';
+	
+	for (var t = (canvas.height / time_size) | 0; t != 0; --t) {
+		var y = canvas.height + o_y - (t * time_size);
+		
+		ctx.fillText(t, o_x / 2, y - 1);
+		ctx.fillRect(o_x / 2, y, right + o_x / 2, 1);
+	}
+	
+	for (var n = 0; n != data.length; ++n) {
+		var rn = (n + 1);
+		
+		ctx.fillStyle = '#d4d4d4';
+		ctx.fillRect(rn * unit_size + o_x, o_y, 1, canvas.height);
+		
+		var d = data[n];
+		var tmp = d.average * time_size;
+		
+		var x = rn * unit_size - unit_size / 2;
+		var y = canvas.height - tmp;
+		
+		tmp = d.standard * time_size;
+		
+		ctx.fillStyle = '#CC2529';
+		ctx.fillRect(x + o_x - 1, y + o_y - tmp, 3, tmp + tmp);
+		
+		ctx.fillStyle = '#3e9651';
+		ctx.fillRect(x + o_x - x_half, y + o_y - y_half, x_size, y_size);
+		
+		ctx.fillText(d.average, x + o_x - o_ux, y + o_y - 1);
+		ctx.fillRect(x + o_x - o_ux, y + o_y, o_ux, 1);
+	}
+	ctx.fillStyle = '#000';
+	ctx.fillRect(o_x, canvas.height + o_y - 1, canvas.width, 1);
+	ctx.fillRect(o_x, o_y, 1, canvas.height);
+});
+
+QUnit.test("performance: less 3 secs", function (assert) {
+	var cheeses = [];
+	for (var c = 0; c != 5000; ++c)
+		cheeses.push(new Cheese(GenerateCheese(rInt(3, 10), function (x, y, z) {
+			var dist = rInt(1, 100);
+			return rInt(0, 101) <= dist;
+		})));
+	for (var iter = 0; iter != cheeses.length; ++iter)
+		try {
+			cheeses[iter].pour(0, 0);
+		} catch (e) {
+		}
+	var runs = [];
+	for (var run = 0; run != 20; ++run) {
+		var s = new Date();
+		for (var iter = 0; iter != cheeses.length; ++iter)
+			try {
+				cheeses[iter].pour(0, 0);
+			} catch (e) {
+			}
+		runs.push(new Date().getTime() - s.getTime());
+	}
+	var sum = 0;
+	for (var i = 0; i != runs.length; ++i) {
+		//runs[i] = runs[i] / cheeses.length;
+		sum += runs[i];
+	}
+	var avrg = sum / runs.length;
+	sum = 0;
+	for (var i = 0; i != runs.length; ++i) {
+		var tmp = runs[i] - avrg;
+		sum += tmp * tmp;
+	}
+	var vari = sum / runs.length;
+	var std = Math.sqrt(vari);
+	console.log('Average: ' + avrg);
+	console.log('Varianz: ' + vari);
+	console.log('Standard-deviation: ' + std);
+	assert.ok(avrg < 3000);
+});
+
+function rInt (min, max) {
+	return Math.floor(Math.random() * (max - min)) + min;
+}
+
+// function time (interval) {
+	// var rounds = 0;
+	// var tmp = window.setInterval(function () {
+		// rounds++;
+	// }, interval);
+	// return function () {
+		// window.clearInterval(tmp);
+		// return rounds * interval;
+	// };
+// };
